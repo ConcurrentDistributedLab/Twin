@@ -1,0 +1,255 @@
+{
+  "global_settings": {
+    "num_runs": 10,
+    "cores": 96,
+    "max_threads": 96,
+    "threads": [ 1, 4, 8, 16, 32, 48, 96 ],
+    "op_between": 500,
+    "time_main": 3000,
+    "time_secondary": 9000,
+    "pinning": "titan",
+    "numa": true
+  },
+  "configurations": [
+    {
+      "name": "inserts/increase",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 512 ],
+      "less_op": 0,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 0,
+          "name": "test_insert_increase_time",
+          "plots": [
+            {
+              "generator": {
+                "keys": [ "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "2a.png",
+                    []
+                  ]
+                ]
+              },
+              "type": "stats",
+              "input_file": "stats_test_insert_increase_time.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "Insertions in ascending order (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inserts/random",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 512 ],
+      "less_op": 0,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 1,
+          "name": "test_insert_random_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_insert_random_time.jsonl",
+              "output_file": "3a.png",
+              "title": "Random Inserts (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/50",
+      "programs": [ "Twin_List" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 131072 ],
+      "less_op": 262144,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4b.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/50",
+      "programs": [ "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 262144 ],
+      "less_op": 524288,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4b.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/0",
+      "programs": [ "Twin_List" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 131072 ],
+      "less_op": 262144,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4a.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/0",
+      "programs": [ "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 262144 ],
+      "less_op": 524288,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4a.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rand/8",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 512 ],
+      "less_op": 256,
+      "run_in_modes": [ "bash" ],
+      "test_cases": [
+        {
+          "num": 3,
+          "name": "test_random_with_elements_rkeys_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "5a.png",
+              "title": "2^8 Inserts and Random Inserts - Deletes (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

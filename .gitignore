@@ -1,0 +1,45 @@
+# VS code
+.vscode/
+
+# Object files
+*.o
+
+# Executable files
+*.out
+*copy*
+*\ccsynch
+
+# Python Environment files
+*\myenv
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+*.egg-info/
+dist/
+build/
+
+# Result Files
+*.tmp
+*\results*
+
+!**link.txt
+!**README.txt
+!**license.txt
+**\backup
+**\main
+**\test_chromatic
+**\old_scripts
+
+# temporary files
+*.tmp
+*.temp

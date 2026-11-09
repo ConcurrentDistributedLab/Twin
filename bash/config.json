@@ -1,0 +1,617 @@
+{
+  "global_settings": {
+    "num_runs": 10,
+    "cores": 96,
+    "max_threads": 96,
+    "threads": [ 1, 4, 8, 16, 32, 48, 96 ],
+    "op_between": 500,
+    "time_main": 3000,
+    "time_secondary": 9000,
+    "pinning": "titan",
+    "numa": true
+  },
+  "configurations": [
+    {
+      "name": "inserts/increase",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 512 ],
+      "less_op": 0,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 0,
+          "name": "test_insert_increase_time",
+          "plots": [
+            {
+              "generator": {
+                "keys": [ "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "2a.png",
+                    []
+                  ],
+                  [ "7a.png",
+                    [ "Twin-LJ", "LJ" ]
+                  ]
+                ]
+              },
+              "type": "stats",
+              "input_file": "stats_test_insert_increase_time.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "Insertions in ascending order (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "2c.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "2b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "7b.png",
+                    [ "Twin-List", "Twin-TSL", "TSL", "BST", "CC-BST" ]
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "7d.png",
+                    [ "Twin-List", "Twin-LJ", "Twin-TSL", "CC-BST", "BST", "LJ", "TSL" ]
+                  ],
+                  [ "expression: (`metrics.total_rebalance`) / `metrics.total_inserts`", "Average Rebalance Operations per Insert", "7c.png",
+                    [ "Twin-List", "Twin-LJ", "Twin-TSL", "CC-BST", "BST", "LJ", "TSL" ]
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_insert_increase_time.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inserts/random",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 512 ],
+      "less_op": 0,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 1,
+          "name": "test_insert_random_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_insert_random_time.jsonl",
+              "output_file": "3a.png",
+              "title": "Random Inserts (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "8b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "3c.png",
+                    [ "Twin-List" ]
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "8a.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "3b.png",
+                    [ "Twin-List" ]
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_insert_random_time.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/50",
+      "programs": [ "Twin_List" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 131072 ],
+      "less_op": 262144,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4b.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "10b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "10a.png",
+                    []
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_delete_rkeys.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/50",
+      "programs": [ "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 262144 ],
+      "less_op": 524288,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4b.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "10b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "10a.png",
+                    []
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_delete_rkeys.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/0",
+      "programs": [ "Twin_List" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 131072 ],
+      "less_op": 262144,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4a.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "9e.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "9f.png",
+                    [ "BST", "Chromatic" ]
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "9b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "9c.png",
+                    [ "BST", "Chromatic", "LJ", "TSL" ]
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "4c.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "9d.png",
+                    [ "Twin-List" ]
+                  ],
+                  [ "expression: `metrics.insert_retries` / `metrics.total_deletes`", "Average Attempts per Operation", "9a.png",
+                    []
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_delete_rkeys.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "extracts/0",
+      "programs": [ "Chromatic", "CCChromatic", "Bst", "CCBst", "LJ", "Twin_LJ", "Tsl", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 100 ],
+      "op_counts": [ 262144 ],
+      "less_op": 524288,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 2,
+          "name": "test_delete_rkeys",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_delete_rkeys.jsonl",
+              "output_file": "4a.png",
+              "title": "Extractions after Insertions with random keys (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "9e.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "9f.png",
+                    [ "BST", "Chromatic" ]
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "9b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "9c.png",
+                    [ "BST", "Chromatic", "LJ", "TSL" ]
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "4c.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "9d.png",
+                    [ "Twin-List" ]
+                  ],
+                  [ "expression: `metrics.insert_retries` / `metrics.total_deletes`", "Average Attempts per Operation", "9a.png",
+                    []
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_delete_rkeys.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rand/0",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 512 ],
+      "less_op": 0,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 3,
+          "name": "test_random_with_elements_rkeys_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "12b.png",
+              "title": "Random Inserts - Deletes (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rand/8",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 512 ],
+      "less_op": 256,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 3,
+          "name": "test_random_with_elements_rkeys_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "5a.png",
+              "title": "2^8 Inserts and Random Inserts - Deletes (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            },
+            {
+              "generator": {
+                "keys": [ "METRIC_NAME", "TITLE_TEXT", "OUTPUT_FILE", "EXCLUDE" ],
+                "values": [
+                  [ "expression: (`metrics.num_atomics` + `metrics.num_external_atomics`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Atomics per Operation", "11c.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "5c.png",
+                    [ "Twin-List" ]
+                  ],
+                  [ "expression: (`metrics.L1_dcache_load_misses` + `metrics.l2_lines_in_all` + `metrics.LLC_load_misses`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Cache Misses per Operation", "11b.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "11a.png",
+                    []
+                  ],
+                  [ "expression: (`metrics.pointers_ins_traversed` + `metrics.pointers_reb_traversed` + `metrics.pointers_traversed`) / (`metrics.total_inserts` + `metrics.total_deletes`)", "Average Pointers Traversed per Operation", "5b.png",
+                    [ "Twin-List" ]
+                  ]
+                ]
+              },
+              "type": "counts",
+              "input_file": "counts_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "{OUTPUT_FILE}",
+              "title": "{TITLE_TEXT}",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "{TITLE_TEXT}",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "exclude": "{EXCLUDE}",
+              "data_source": {
+                "y_value": "{METRIC_NAME}",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rand/14",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 50 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 512 ],
+      "less_op": 16384,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 3,
+          "name": "test_random_with_elements_rkeys_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "12c.png",
+              "title": "2^14 Inserts and Random Inserts - Deletes (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rand/P60",
+      "programs": [ "Twin_List", "Chromatic", "CCChromatic", "Bst", "CCBst", "Twin_LJ", "Twin_Tsl" ],
+      "op_percentages": [ 60 ],
+      "del_percentages": [ 50 ],
+      "op_counts": [ 512 ],
+      "less_op": 256,
+      "count_stats_flags": [ "COMPUTE_STATS", "COMPUTE_HEIGHT", "COMPUTE_SKIPLIST_LEVELS", "COMPUTE_AVG", "COMPUTE_COMBINER", "COMPUTE_ATOMIC", "COMPUTE_HW_EVENTS" ],
+      "run_in_modes": [ "bash", "counts" ],
+      "test_cases": [
+        {
+          "num": 3,
+          "name": "test_random_with_elements_rkeys_time",
+          "plots": [
+            {
+              "type": "stats",
+              "input_file": "stats_test_random_with_elements_rkeys_time.jsonl",
+              "output_file": "12a.png",
+              "title": "2^8 Inserts and Random Inserts - Deletes (Throughput)",
+              "x_label": "Number of Threads",
+              "filter_tag": "threads",
+              "y_label": "Throughput (Million ops/s)",
+              "trim_k": 1,
+              "trim_by": "metrics.result_time",
+              "data_source": {
+                "y_value": "expression: (`metrics.result_ops` / (`metrics.result_time` * 1000))",
+                "x_value": "threads",
+                "aggregator": "mean"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

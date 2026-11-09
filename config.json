@@ -1,0 +1,58 @@
+{
+  "filters": {
+    "threads": {
+      "all_threads": "threads > 0"
+    }
+  },
+  "exclude": [],
+  "no_trim": false,
+  "show_title": false,
+  "show_legend": false,
+  "normalization": "linear",
+  "marker_slide_pts": 10,
+  "marker_overlap_factor": 1.2,
+  "rename": [
+    "Twin_List==Twin-List",
+    "Twin_LJ==Twin-LJ",
+    "Twin_Tsl==Twin-TSL",
+    "Tsl==TSL",
+    "LJ==LJ",
+    "Bst==BST",
+    "Chromatic==Chromatic",
+    "CCChromatic==CC-Chromatic",
+    "CCBst==CC-BST"
+  ],
+  "order": [
+    "Twin-List",
+    "Twin-LJ",
+    "Twin-TSL",
+    "CC-BST",
+    "BST",
+    "CC-Chromatic",
+    "Chromatic",
+    "LJ",
+    "TSL"
+  ],
+  "color": [
+    "Twin-LJ:#1f77b4",
+    "Twin-List:#ff7f0e",
+    "Twin-TSL:#2ca02c",
+    "CC-BST:#c3b3e7",
+    "BST:#9467bd",
+    "CC-Chromatic:#d8c3a5",
+    "Chromatic:#8c564b",
+    "LJ:#e377c2",
+    "TSL:#7f7f7f"
+  ],
+  "marker": [
+    "Twin-LJ:o",
+    "LJ:o:none",
+    "Twin-List:s",
+    "Twin-TSL:^",
+    "TSL:^:none",
+    "CC-BST:D",
+    "BST:D:none",
+    "Chromatic:v:none",
+    "CC-Chromatic:v"
+  ]
+}
