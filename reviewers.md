@@ -76,7 +76,7 @@ On success it prints a summary with `N passed, 0 failed` and exits with status `
 From the repository root:
 
 ```bash
-./run.sh
+printf 'y' | ./run.sh
 ```
 
 This executes the configured benchmarks and generates the plots.
